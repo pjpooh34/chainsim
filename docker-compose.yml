@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: chainsim-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: chainsim
+    volumes:
+      - mongodb_data:/data/db
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - chainsim-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: chainsim-backend
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      NODE_ENV: production
+      PORT: 5001
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/chainsim?authSource=admin
+      JWT_SECRET: your-production-jwt-secret-here
+      JWT_EXPIRES_IN: 7d
+      FRONTEND_URL: http://localhost:3001
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend/uploads:/app/uploads
+    networks:
+      - chainsim-network
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: chainsim-frontend
+    restart: unless-stopped
+    ports:
+      - "3001:80"
+    environment:
+      VITE_API_URL: http://localhost:5001/api
+    depends_on:
+      - backend
+    networks:
+      - chainsim-network
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    container_name: chainsim-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - chainsim-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  chainsim-network:
+    driver: bridge
