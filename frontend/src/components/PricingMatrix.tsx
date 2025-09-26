@@ -30,6 +30,7 @@ import {
   Activity,
   TrendingUp
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 export default function PricingMatrix() {
   const [selectedTab, setSelectedTab] = useState('overview');
@@ -309,7 +310,21 @@ export default function PricingMatrix() {
     }
   ];
 
-  const acceleratorLibrary = [
+  type AcceleratorComplexity = 'Low' | 'Medium' | 'High';
+
+  interface AcceleratorDefinition {
+    name: string;
+    description: string;
+    icon: LucideIcon;
+    complexity: AcceleratorComplexity;
+    duration: string;
+    pricing?: string;
+  }
+
+  const acceleratorLibrary: Array<{
+    category: string;
+    accelerators: AcceleratorDefinition[];
+  }> = [
     {
       category: 'Core 5 Accelerators (MVP Launch)',
       accelerators: [
@@ -485,7 +500,7 @@ export default function PricingMatrix() {
     }
   ];
 
-  const getComplexityColor = (complexity: string) => {
+  const getComplexityColor = (complexity: AcceleratorComplexity) => {
     switch (complexity) {
       case 'Low': return 'text-emerald-600 bg-emerald-50 border-emerald-200';
       case 'Medium': return 'text-amber-600 bg-amber-50 border-amber-200';

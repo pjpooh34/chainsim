@@ -13,7 +13,8 @@ import {
   ArrowRight,
   Lightbulb,
   CheckCircle,
-  Brain
+  Brain,
+  Rocket
 } from 'lucide-react';
 
 export default function KpiTranslator() {

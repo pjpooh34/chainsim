@@ -33,10 +33,11 @@ import {
   FileCheck,
   Briefcase
 } from 'lucide-react';
+import type { AppView } from '../types/navigation';
 
 interface ChainSimHomepageProps {
   onStartTrial: () => void;
-  onNavigate: (view: string) => void;
+  onNavigate: (view: AppView) => void;
 }
 
 export default function ChainSimHomepage({ onStartTrial, onNavigate }: ChainSimHomepageProps) {

@@ -30,7 +30,6 @@ import {
   BarChart3,
   PieChart,
   LineChart,
-  HeatMapIcon,
   AlertCircle,
   ChevronRight,
   Plus,

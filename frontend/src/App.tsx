@@ -30,8 +30,9 @@ import {
   CreditCard,
   DollarSign
 } from "lucide-react";
+import type { AppView } from "./types/navigation";
 
-type ActiveView = 'home' | 'sandbox' | 'portfolio' | 'regRadar' | 'analytics' | 'readiness' | 'investorComms' | 'riskCompliance' | 'settings' | 'pricing' | 'billing';
+type ActiveView = AppView;
 
 export default function App() {
   const [activeView, setActiveView] = useState<ActiveView>('home');
@@ -162,7 +163,12 @@ export default function App() {
   const renderActiveView = () => {
     switch (activeView) {
       case 'home':
-        return <ChainSimHomepage onStartTrial={handleStartTrial} onNavigate={setActiveView} />;
+        return (
+          <ChainSimHomepage
+            onStartTrial={handleStartTrial}
+            onNavigate={(view) => setActiveView(view)}
+          />
+        );
       case 'sandbox':
         return <SandboxDemo />;
       case 'portfolio':
@@ -189,7 +195,12 @@ export default function App() {
       case 'billing':
         return <BillingManagement customerId="cus_test123" />;
       default:
-        return <ChainSimHomepage onStartTrial={handleStartTrial} onNavigate={setActiveView} />;
+        return (
+          <ChainSimHomepage
+            onStartTrial={handleStartTrial}
+            onNavigate={(view) => setActiveView(view)}
+          />
+        );
     }
   };
 

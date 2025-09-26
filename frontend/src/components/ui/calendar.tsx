@@ -3,6 +3,7 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
+import type { DayPickerProps } from "react-day-picker";
 
 import { cn } from "./utils";
 import { buttonVariants } from "./button";
@@ -10,9 +11,10 @@ import { buttonVariants } from "./button";
 function Calendar({
   className,
   classNames,
+  components,
   showOutsideDays = true,
   ...props
-}: React.ComponentProps<typeof DayPicker>) {
+}: DayPickerProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -57,16 +59,17 @@ function Calendar({
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
-        ...classNames,
+        ...(classNames ?? {}),
       }}
       components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("size-4", className)} {...props} />
+        IconLeft: ({ className: iconClassName }: { className?: string }) => (
+          <ChevronLeft className={cn("size-4", iconClassName)} />
         ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("size-4", className)} {...props} />
+        IconRight: ({ className: iconClassName }: { className?: string }) => (
+          <ChevronRight className={cn("size-4", iconClassName)} />
         ),
-      }}
+        ...(components ?? {}),
+      } as DayPickerProps['components']}
       {...props}
     />
   );
